@@ -1,18 +1,42 @@
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { login } from '../../actions/auth';
+
+import { useForm } from '../../hooks/useForm';
 
 const LoginScreen = () => {
+
+    // Es un hook de react redux que permite darnos acceso al dispatch del store
+    const dispatch = useDispatch();
+
+    const [{ email, password }, handleInputChange] = useForm({
+        email: 'paul@gmail.com',
+        password: '123456'
+    });
+
+    const handleLogin = e => {
+        e.preventDefault();
+
+        console.log({ email, password });
+        dispatch(login(12345, 'Paul'));
+    }
+
     return (
         <>
             <h3 className="auth__title">Login</h3>
 
-            <form>
+            <form
+                onSubmit={handleLogin}
+            >
                 <input
                     type="text"
                     placeholder="Email"
                     name="email"
                     className="auth__input"
                     autoComplete="off"
+                    value={email}
+                    onChange={handleInputChange}
                 />
 
                 <input
@@ -20,6 +44,8 @@ const LoginScreen = () => {
                     placeholder="Password"
                     name="password"
                     className="auth__input"
+                    value={password}
+                    onChange={handleInputChange}
                 />
 
                 <button
