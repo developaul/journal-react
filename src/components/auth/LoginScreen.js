@@ -1,26 +1,45 @@
 import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
-import { login } from '../../actions/auth';
+import validator from 'validator';
 
 import { useForm } from '../../hooks/useForm';
 
+import { setError, removeError } from '../../actions/ui';
+import { startLoginEmailPassword, startGoogleLogin } from '../../actions/auth';
+
 const LoginScreen = () => {
 
-    // Es un hook de react redux que permite darnos acceso al dispatch del store
     const dispatch = useDispatch();
+    const { loading, msgError } = useSelector(state => state.ui);
 
     const [{ email, password }, handleInputChange] = useForm({
-        email: 'paul@gmail.com',
+        email: 'nando@gmail.com',
         password: '123456'
     });
 
     const handleLogin = e => {
         e.preventDefault();
 
-        console.log({ email, password });
-        dispatch(login(12345, 'Paul'));
+        if (isFormValid()) dispatch(startLoginEmailPassword(email, password));
     }
+
+    const isFormValid = () => {
+
+        if (!validator.isEmail(email)) {
+            dispatch(setError('Email is not valid'));
+            return false;
+        } else if (password.length < 5) {
+            dispatch(setError('Password should be at least 6 characters and match each other'));
+            return false;
+        }
+
+        dispatch(removeError());
+
+        return true;
+    }
+
+    const handleGoogleLogin = () => dispatch(startGoogleLogin());
 
     return (
         <>
@@ -29,6 +48,15 @@ const LoginScreen = () => {
             <form
                 onSubmit={handleLogin}
             >
+
+                {msgError &&
+                    (
+                        <div className="auth__alert-error">
+                            {msgError}
+                        </div>
+                    )
+                }
+
                 <input
                     type="text"
                     placeholder="Email"
@@ -51,6 +79,7 @@ const LoginScreen = () => {
                 <button
                     type="submit"
                     className="btn btn-block btn-primary"
+                    disabled={loading}
                 >
                     Login
                 </button>
@@ -60,6 +89,7 @@ const LoginScreen = () => {
 
                     <div
                         className="google-btn"
+                        onClick={handleGoogleLogin}
                     >
                         <div className="google-icon-wrapper">
                             <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
