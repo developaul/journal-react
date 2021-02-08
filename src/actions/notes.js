@@ -48,9 +48,17 @@ export const addNewNote = (id, note) => ({
 
 export const startLoadingNotes = uid => async dispatch => {
 
-    const notes = await loadNotes(uid);
+    try {
 
-    dispatch(setNotes(notes));
+        const notes = await loadNotes(uid);
+
+        dispatch(setNotes(notes));
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
 
 }
 
@@ -73,7 +81,7 @@ export const startSaveNote = note => async (dispatch, getState) => {
         await db.doc(`${uid}/journal/notes/${note.id}`).update(noteToFireStore);
 
         dispatch(refreshNote(note.id, noteToFireStore));
-        Swal.fire('Saved', note.title, 'success');
+        Swal?.fire('Saved', note.title, 'success');
 
     } catch (err) {
 
@@ -95,7 +103,7 @@ export const startUploading = file => async (dispatch, getState) => {
 
     const { active: activeNote } = getState().notes;
 
-    Swal.fire({
+    Swal?.fire({
         title: 'Uploading...',
         text: 'Please wait...',
         allowOutsideClick: false,

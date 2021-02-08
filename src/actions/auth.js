@@ -76,7 +76,6 @@ export const startLogout = () => async dispatch => {
 
         dispatch(logout());
 
-
         dispatch(noteslogout());
 
     } catch (err) {
