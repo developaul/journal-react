@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
-import { startRegisterWithEmailPasswordName } from '../../../actions/auth';
 import RegisterScreen from '../../../components/auth/RegisterScreen';
 import { types } from '../../../types/types';
 
@@ -64,6 +63,32 @@ describe('Pruebas en RegisterScreen', () => {
             type: types.uiSetError,
             payload: 'Email is not valid'
         });
+
+    });
+
+    test('Debe de mostrar la caja de alerta con el error', () => {
+
+        const initState = {
+            ui: {
+                loading: false,
+                msgError: 'Email no es correcto'
+            }
+        };
+
+        const store = mockStore(initState);
+
+        const wrapper = mount(
+            <Provider
+                store={store}
+            >
+                <MemoryRouter>
+                    <RegisterScreen />
+                </MemoryRouter>
+            </Provider>
+        );
+
+        expect(wrapper.find('.auth__alert-error').exists()).toBeTruthy();
+        expect(wrapper.find('.auth__alert-error').text().trim()).toBe(initState.ui.msgError);
 
     });
 

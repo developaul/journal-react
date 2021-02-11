@@ -15,7 +15,7 @@ import { firebase } from '../firebase/firebase-config';
 import { login } from '../actions/auth';
 import { startLoadingNotes } from '../actions/notes';
 
-const AppRouter = () => {
+export const AppRouter = () => {
 
     const dispatch = useDispatch();
 
@@ -29,6 +29,7 @@ const AppRouter = () => {
             if (user?.uid) {
 
                 dispatch(login(user.uid, user.displayName));
+
                 setIsLogged(true);
 
                 dispatch(startLoadingNotes(user.uid));
@@ -69,5 +70,3 @@ const AppRouter = () => {
         </Router>
     )
 }
-
-export default AppRouter

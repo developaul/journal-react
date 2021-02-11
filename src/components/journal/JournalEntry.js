@@ -52,4 +52,4 @@ const JournalEntry = ({ body, date, title, url, id }) => {
     )
 }
 
-export default JournalEntry
+export default JournalEntry;
